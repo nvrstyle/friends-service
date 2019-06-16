@@ -1,107 +1,96 @@
-Сервис друзей
+# Сервис друзей
+### Создание базы данных для сервиса друзей
 
-Порт 8000
+    CREATE TABLE friends (
+      id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+      userid INT NOT NULL,
+      friendid INT NOT NULL,
+      status INT NOT NULL,
+    
+      UNIQUE (userid,friendid)
+    )ENGINE = InnoDB;
+    
+    INSERT INTO friends VALUES (1,1234,4321,0);
+    INSERT INTO friends VALUES (2,4321,2234,0);
+    INSERT INTO friends VALUES (3,1234,5678,1);
+    INSERT INTO friends VALUES (4,5678,1234,1);
+    INSERT INTO friends VALUES (5,1234,9876,0);
+    INSERT INTO friends VALUES (6,9876,1234,0);
 
----Запрос - получить всех друзей пользователя {userid}
+### API
+
+#### Запрос - получить всех друзей пользователя {userid}
 GET localhost:8000/friends/{userid}/ext
 
-Тело ответа( на данный момент)
+Тело ответа
 
-{
-    "friendsInRequest": 5,
-    "friend_id": [
-        5678
-    ],
-    "friend_out_id": [
-        1235,
-        2244,
-        2957,
-        2958,
-        2959
-    ],
-    "friend_in_id": [
-        2957,
-        2958,
-        2959,
-        2244,
-        1235
-    ],
-    "friendsCount": 1,
-    "friendsOutRequest": 5
-}
+    {
+        "friendsInRequest": 5,
+        "friend_id": [
+            5678
+        ],
+        "friend_out_id": [
+            1235,
+            2244,
+            2957,
+            2958,
+            2959
+        ],
+        "friend_in_id": [
+            2957,
+            2958,
+            2959,
+            2244,
+            1235
+        ],
+        "friendsCount": 1,
+        "friendsOutRequest": 5
+    }
 
-Тело ответа( в будущем)
+#### Добавление в друзья
 
-"friendsInRequest": 5,
-    "friend_id": [
+ 
+
+    POST /friends/ext
+        
+      
+   тело запроса:
+        
         {
-		"login": "vasya", 
-  "name": "\u0412\u0430\u0441\u044f", 
-  "password": "c4ca4238a0b923820dcc509a6f75849b", 
-  "surname": "\u0418\u0432\u0430\u043d\u043e\u0432", 
-  "uid": 1
-  }
-    ],
-    "friend_out_id": [
-        1235,
-        2244,
-        2957,
-        2958,
-        2959
-    ],
-    "friend_in_id": [
-        2957,
-        2958,
-        2959,
-        2244,
-        1235
-    ],
-    "friendsCount": 1,
-    "friendsOutRequest": 5
-}
+            "userid": 1234,
+            "friendid": 9876
+        }
+    
 
------Добавление в друзья
+Возвращает в качестве ответа полный список друзей пользователя
 
-POST /friends/ext
+#### Удаление из друзей 
+ 
 
-тело запроса
-
-{
-    "userid": 1234,
-    "friendid": 9876
-}
-
-вернёт тоже самое что и самый первый метод
-
-
-----удаление из друзей 
-
-DELETE /friends/{userid}/friend/{friendid}/ext
+    DELETE /friends/{userid}/friend/{friendid}/ext
 
 где {userid} это id пользователя под которым зашли, {friendid} - id друга, которого хотим удалить
 
-ответ такой же как и в первом методе
+Возвращает в качестве ответа полный список друзей пользователя
 
-Одобряем запрос юзера в друзья
-GET /friends/{userid}/accept/{friendid}/ext
+#### Одобрение заявки в друзья
 
-где {userid} это id пользователя под которым зашли, {friendid} - id друга, которого хотим удалить
+    GET /friends/{userid}/accept/{friendid}/ext
 
-ответ такой же как и в первом методе
+где {userid} это id пользователя под которым зашли, {friendid} - id друга, которого хотим добавить в друзья
 
------Являются ли два пользователя друзьями
+Возвращает в качестве ответа полный список друзей пользователя
 
-GET /friends/{userid}/isfriend/{friendid}
+#### Являются ли два пользователя друзьями
 
-где {userid} это id пользователя под которым зашли, {friendid} - id друга, которого хотим удалить
+    GET /friends/{userid}/isfriend/{friendid}
+
+где {userid} это id пользователя под которым зашли, {friendid} - id другого пользователя
 
 Тело ответа:
 
-{
-    "friended": 0
-}
+    {
+        "friended": 0
+    }
 
 0 - если не друзья, 1 - если друзья
-
-
-
