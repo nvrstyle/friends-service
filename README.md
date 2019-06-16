@@ -25,7 +25,7 @@
 ### API
 
 #### Запрос - получить всех друзей пользователя {userid}
-GET localhost:8000/friends/{userid}/ext
+    GET localhost:8000/friends/{userid}/ext
 
 Тело ответа
 
